@@ -3,10 +3,12 @@ package com.arianfarahani.facialcogs.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.arianfarahani.facialcogs.R;
 
@@ -22,6 +24,8 @@ public class ProfileFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+    private TextView username, twin_count;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -48,9 +52,18 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        username = (TextView) getView().findViewById(R.id.user_name);
+        twin_count = (TextView) getView().findViewById(R.id.count);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    //Cannot modify views in a fragment in onCreate because the views havent been inflated yet
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

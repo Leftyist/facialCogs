@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,6 @@ public class TwinFragment extends Fragment {
      *
      * @return A new instance of fragment TwinFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static TwinFragment newInstance() {
         TwinFragment fragment = new TwinFragment();
         return fragment;
@@ -47,10 +48,14 @@ public class TwinFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_twin, container, false);
+        View view = inflater.inflate(R.layout.fragment_twin, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
