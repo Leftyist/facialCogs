@@ -23,8 +23,8 @@ public class MainLoginActivity extends AppCompatActivity
     final                int    REQUEST_USE_CAMERA = 0;
     CameraHelper cameraHelper;
     AtomicBoolean cameraPermission = new AtomicBoolean(false);
+    AtomicBoolean verifying = new AtomicBoolean(false);
     RelativeLayout spinner;
-    VerifyTask verifyTask;
 
     @Override
     protected void onResume()
@@ -62,14 +62,14 @@ public class MainLoginActivity extends AppCompatActivity
         public void onReturn(boolean verified)
         {
             spinner.setVisibility(View.GONE);
-
+            verifying.set(false);
+            
             if (verified)
             {
                 Intent intent = new Intent(spinner.getContext(), HomeActivity.class);
                 spinner.getContext().startActivity(intent);
             } else
             {
-                verifyTask = null;
                 cameraHelper.startPreview();
                 Toast.makeText(spinner.getContext(), "Try Again", Toast.LENGTH_SHORT).show();
             }
@@ -88,9 +88,9 @@ public class MainLoginActivity extends AppCompatActivity
         public void snapshotResult(CaptureResult result)
         {
             RelativeLayout spinner = findViewById(R.id.relativelayout_progress);
-            if(verifyTask == null) {
-                verifyTask = new VerifyTask(verificationListener);
-                verifyTask.execute(result);
+            if(!verifying.get()) {
+                verifying.set(true);
+                new VerifyTask(verificationListener).execute(result);
             }
 
         }
