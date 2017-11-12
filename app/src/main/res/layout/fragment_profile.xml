@@ -5,10 +5,10 @@
     android:background="@color/white"
     android:orientation="vertical"
 
-    tools:context="com.arianfarahani.facialcogs.Fragments.ProfileFragment">
+    tools:context="com.arianfarahani.facialcogs.fragments.ProfileFragment">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/profile_image"
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_gravity="center_horizontal"
