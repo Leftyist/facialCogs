@@ -1,5 +1,6 @@
 package com.arianfarahani.facialcogs;
 
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 import com.arianfarahani.facialcogs.Fragments.ProfileFragment;
 import com.arianfarahani.facialcogs.Fragments.TwinFragment;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, TwinFragment.OnFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -81,6 +82,14 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //This was added because this class must implement ProfileFragment.OnFragmentInteractionListener
+    //This method must also be here for TwinFragment.OnFragmentInteractionListener
+    //This method was therefore auto generated
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
 
