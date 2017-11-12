@@ -55,9 +55,9 @@ public class MainLoginActivity extends AppCompatActivity implements LoaderCallba
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private              UserLoginTask mAuthTask         = null;
+    private UserLoginTask mAuthTask = null;
 
-    // UI references.
+    // UI references
     private AutoCompleteTextView mEmailView;
     private EditText             mPasswordView;
     private View                 mProgressView;
