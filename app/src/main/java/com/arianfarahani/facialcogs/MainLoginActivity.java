@@ -23,6 +23,8 @@ public class MainLoginActivity extends AppCompatActivity
     final                int    REQUEST_USE_CAMERA = 0;
     CameraHelper cameraHelper;
     AtomicBoolean cameraPermission = new AtomicBoolean(false);
+    RelativeLayout spinner;
+    VerifyTask verifyTask;
 
     @Override
     protected void onResume()
@@ -36,6 +38,7 @@ public class MainLoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
         cameraHelper = new CameraHelper();
+        spinner = findViewById(R.id.relativelayout_progress);
 
         checkPermissions(); //also starts the preview
 
@@ -45,45 +48,85 @@ public class MainLoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(cameraPermission.get()) {
+                if (cameraPermission.get())
+                {
                     cameraHelper.takeSnapshot();
                 }
             }
         });
     }
 
-    private CameraHelper.OnCameraRequest resultListener = new CameraHelper.OnCameraRequest() {
+    private VerifyTask.VerifyResults verificationListener = new VerifyTask.VerifyResults()
+    {
+        @Override
+        public void onReturn(boolean verified)
+        {
+            spinner.setVisibility(View.GONE);
+
+            if (verified)
+            {
+                Intent intent = new Intent(spinner.getContext(), HomeActivity.class);
+                spinner.getContext().startActivity(intent);
+            } else
+            {
+                verifyTask = null;
+                cameraHelper.startPreview();
+                Toast.makeText(spinner.getContext(), "Try Again", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onStart()
+        {
+            spinner.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private CameraHelper.OnCameraRequest resultListener = new CameraHelper.OnCameraRequest()
+    {
         @Override
         public void snapshotResult(CaptureResult result)
         {
             RelativeLayout spinner = findViewById(R.id.relativelayout_progress);
-            new VerifyTask(spinner, cameraHelper).execute(result);
+            if(verifyTask == null) {
+                verifyTask = new VerifyTask(verificationListener);
+                verifyTask.execute(result);
+            }
+
         }
     };
 
-    private static class VerifyTask extends AsyncTask<CaptureResult, Integer, Boolean> {
+    private static class VerifyTask extends AsyncTask<CaptureResult, Integer, Boolean>
+    {
+        private VerifyResults listener;
 
-        private RelativeLayout spinner;
-        private CameraHelper cameraHelper;
+        interface VerifyResults
+        {
+            public void onReturn(boolean verified);
 
-        VerifyTask(RelativeLayout spinnerView, CameraHelper camHelper) {
-            spinner = spinnerView;
-            cameraHelper = camHelper;
+            public void onStart();
+        }
+
+        public VerifyTask(VerifyResults listener) {
+            this.listener = listener;
         }
 
         @Override
         protected void onPreExecute()
         {
             super.onPreExecute();
-            spinner.setVisibility(View.VISIBLE);
+            listener.onStart();
         }
 
         @Override
         protected Boolean doInBackground(CaptureResult... captureResults)
         {
-            try{
+            try
+            {
                 Thread.sleep(2000);
-            } catch(Exception e) {
+            } catch (Exception e)
+            {
+
             }
 
             return true;
@@ -93,20 +136,13 @@ public class MainLoginActivity extends AppCompatActivity
         protected void onPostExecute(Boolean verified)
         {
             super.onPostExecute(verified);
-            spinner.setVisibility(View.GONE);
-            if(verified) {
-                Intent   intent   = new Intent(spinner.getContext(), HomeActivity.class);
-                spinner.getContext().startActivity(intent);
-            } else {
-                cameraHelper.startPreview();
-                Toast.makeText(spinner.getContext(), "Try Again", Toast.LENGTH_SHORT).show();
-            }
-                
+            listener.onReturn(verified);
         }
 
     }
 
-    private void fillCameraHelper() {
+    private void fillCameraHelper()
+    {
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         cameraHelper.attachView(this, surfaceView, resultListener);
         cameraPermission.set(true);
@@ -158,7 +194,6 @@ public class MainLoginActivity extends AppCompatActivity
             // permissions this app might request
         }
     }
-
 
 
 }
